@@ -1,4 +1,9 @@
-export const APP_NAME = "CareerFlow";
+type dropdownItemType = {
+  label: string,
+  value: string
+}
+
+export const APP_NAME: string = "CareerFlow";
 
 export const STORAGE_KEYS = {
   token: "token",
@@ -15,12 +20,12 @@ export const APPLICATION_STATUS = {
   WITHDRAWN:  { label: "Withdrawn",   color: "#92400e", bg: "#fef3c7", dot: "#d97706" },
 };
 
-export const STATUS_OPTIONS = Object.entries(APPLICATION_STATUS).map(([value, meta]) => ({
+export const STATUS_OPTIONS: Array<dropdownItemType> = Object.entries(APPLICATION_STATUS).map(([value, meta]) => ({
   value,
   label: meta.label,
 }));
 
-export const JOB_TYPE_OPTIONS = [
+export const JOB_TYPE_OPTIONS: Array<dropdownItemType> = [
   { value: "FULL_TIME",   label: "Full-time" },
   { value: "PART_TIME",   label: "Part-time" },
   { value: "CONTRACT",    label: "Contract" },
@@ -28,7 +33,7 @@ export const JOB_TYPE_OPTIONS = [
   { value: "FREELANCE",   label: "Freelance" },
 ];
 
-export const SOURCE_OPTIONS = [
+export const SOURCE_OPTIONS: Array<dropdownItemType> = [
   { value: "LINKEDIN",     label: "LinkedIn" },
   { value: "INDEED",       label: "Indeed" },
   { value: "COMPANY_SITE", label: "Company Site" },
