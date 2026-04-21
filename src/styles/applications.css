@@ -1,0 +1,38 @@
+.apps-eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.apps-status-chips {
+  padding: 0 18px 4px;
+}
+
+.apps-chip-count {
+  margin-left: 6px;
+  color: inherit;
+  opacity: 0.7;
+  font-size: 0.78rem;
+}
+
+.apps-paginator-shell {
+  padding: 0 18px 18px;
+}
+
+.apps-paginator-shell .p-paginator {
+  background: transparent;
+  border: none;
+  padding: 8px 0 0;
+}
+
+.apps-paginator-shell .p-paginator .p-paginator-pages .p-paginator-page,
+.apps-paginator-shell .p-paginator .p-dropdown,
+.apps-paginator-shell .p-paginator .p-paginator-first,
+.apps-paginator-shell .p-paginator .p-paginator-prev,
+.apps-paginator-shell .p-paginator .p-paginator-next,
+.apps-paginator-shell .p-paginator .p-paginator-last {
+  border-radius: 10px;
+}
