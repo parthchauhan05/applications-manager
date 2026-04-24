@@ -71,7 +71,7 @@
 }
 
 body {
-  margin: 0;
+  background: var(--db-bg);
 }
 
 h1,

@@ -1,11 +1,20 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { authService } from "../services/authService";
 import { STORAGE_KEYS } from "../utils/constants";
+import { isTokenExpired, msUntilExpiry } from "../utils/jwt";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(() => localStorage.getItem(STORAGE_KEYS.token));
+const [token, setToken] = useState(() => {
+  const stored = localStorage.getItem(STORAGE_KEYS.token);
+  if (stored && isTokenExpired(stored)) {
+    localStorage.removeItem(STORAGE_KEYS.token);
+    localStorage.removeItem(STORAGE_KEYS.userEmail);
+    return null;
+  }
+  return stored;
+});
   const [userEmail, setUserEmail] = useState(() => localStorage.getItem(STORAGE_KEYS.userEmail));
 
   useEffect(() => {
@@ -17,6 +26,22 @@ export function AuthProvider({ children }) {
     if (userEmail) localStorage.setItem(STORAGE_KEYS.userEmail, userEmail);
     else localStorage.removeItem(STORAGE_KEYS.userEmail);
   }, [userEmail]);
+
+  useEffect(() => {
+  if (!token) return;
+
+  const ms = msUntilExpiry(token);
+  if (ms <= 0) {
+    logout();
+    return;
+  }
+
+  const timer = setTimeout(() => {
+    logout();
+  }, ms);
+
+  return () => clearTimeout(timer);
+}, [token]);
 
   const login = async (email, password) => {
     const res = await authService.login(email, password);

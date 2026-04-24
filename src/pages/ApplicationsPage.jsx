@@ -67,7 +67,7 @@ export default function ApplicationsPage() {
   const [loading, setLoading] = useState(true);
 
   const [page, setPage] = useState(0);
-  const [rows, setRows] = useState(12);
+  const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
 
   const [searchInput, setSearchInput] = useState("");
@@ -103,31 +103,36 @@ export default function ApplicationsPage() {
   };
 
   const loadPage = async () => {
-    setLoading(true);
-    try {
-      const res = await applicationService.getPage({
-        page,
-        size: rows,
-        status: statusFilter,
-        search: debouncedSearch,
-      });
+  setLoading(true);
+  try {
+    const res = await applicationService.getPage({
+      page,
+      size: rows,
+      status: statusFilter,
+      search: debouncedSearch,
+    });
 
-      const data = res.data || {};
-      setItems((data.content || []).map(normalizeApplication));
-      setTotalRecords(data.totalElements || 0);
-    } catch (error) {
-      setItems([]);
-      setTotalRecords(0);
-      toast.current?.show({
-        severity: "error",
-        summary: "Error",
-        detail: "Could not load applications.",
-        life: 3000,
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    const data = res.data;
+
+    const content = Array.isArray(data) ? data : (data.content || []);
+    const total = Array.isArray(data) ? data.length : (data.totalElements || 0);
+
+    setItems(content.map(normalizeApplication));
+    setTotalRecords(total);
+  } catch (error) {
+    console.error("Could not load applications:", error);
+    setItems([]);
+    setTotalRecords(0);
+    toast.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: "Could not load applications.",
+      life: 3000,
+    });
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     loadPage();
@@ -185,6 +190,7 @@ export default function ApplicationsPage() {
       <Toast ref={toast} position="bottom-right" />
 
       <DashboardLayout onCreateClick={() => setCreateOpen(true)}>
+        <div className="ap-page">
         <div className="db-root">
           <div className="db-board">
             <div className="db-board__header">
@@ -454,7 +460,7 @@ export default function ApplicationsPage() {
                 first={page * rows}
                 rows={rows}
                 totalRecords={totalRecords}
-                rowsPerPageOptions={[12, 24, 36]}
+                rowsPerPageOptions={[10, 20, 30, 50]}
                 onPageChange={(e) => {
                   setPage(e.page);
                   setRows(e.rows);
@@ -465,7 +471,8 @@ export default function ApplicationsPage() {
               />
             </div>
           </div>
-        </div>
+          </div>
+          </div>
 
         <ApplicationFormDialog
           visible={createOpen}
