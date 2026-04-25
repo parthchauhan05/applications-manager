@@ -54,7 +54,6 @@
   flex-direction: column;
   gap: 14px;
   padding: 18px 24px 16px;
-  border-bottom: 1px solid var(--db-border);
 }
 
 .ap-page .db-search {
