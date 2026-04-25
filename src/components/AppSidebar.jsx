@@ -97,9 +97,9 @@ export default function AppSidebar({ collapsed = false }) {
 
   const [hoveredId, setHoveredId] = useState(null);
 
-  const initials   = userEmail ? userEmail.slice(0, 2).toUpperCase() : "CF";
+  const initials   = userEmail ? userEmail.slice(0, 2).toUpperCase() : "AM";
   const shortEmail = userEmail
-    ? userEmail.length > 22 ? userEmail.slice(0, 22) + "…" : userEmail
+    ? userEmail.length > 22 ? userEmail.slice(0, 22) + "\u2026" : userEmail
     : "user@example.com";
 
   const isActive = (path) => location.pathname === path;
@@ -114,7 +114,7 @@ export default function AppSidebar({ collapsed = false }) {
           data-pr-tooltip={collapsed ? APP_NAME : undefined}
           data-pr-position="right"
         >
-          <span className="psb__mark">CF</span>
+          <span className="psb__mark">AM</span>
           {!collapsed && <span className="psb__app-name">{APP_NAME}</span>}
         </button>
       </div>
