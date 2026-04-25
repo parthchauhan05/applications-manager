@@ -689,16 +689,6 @@
 /* ── Required asterisk ── */
 .required { color: #e11d48; margin-left: 2px; }
 
-/* ── Textarea ── */
-.field .p-inputtextarea {
-  width: 100%;
-  resize: none;
-}
-
-/* ── Calendar ── */
-.field .p-calendar { width: 100%; }
-.field .p-calendar .p-inputtext { border-radius: var(--db-radius-sm) 0 0 var(--db-radius-sm); }
-
 /* =========================================================
    AUTH — redesigned
 ========================================================= */
@@ -940,35 +930,38 @@
   letter-spacing: 0.005em;
 }
 
-/* All text inputs, password inputs, dropdowns */
+/* ── Shared token values ── */
+:root {
+  --field-height:  46px;
+  --field-px:      14px;
+  --field-py:      11px;
+  --field-radius:  14px;
+  --field-bg:      #fafafa;
+  --field-border:  var(--db-border-mid);
+  --field-fs:      0.95rem;
+}
+
+/* ──────────────────────────────────────────────────────────
+   InputText & Password input
+────────────────────────────────────────────────────────── */
 .field .p-inputtext,
-.field .p-dropdown,
-.field .p-password-input,
 .field .p-password input {
   width: 100%;
-  min-height: 46px;
-  padding: 11px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--db-border-mid);
-  background: #fafafa;
-  font-size: 0.95rem;
+  min-height: var(--field-height);
+  padding: var(--field-py) var(--field-px);
+  border-radius: var(--field-radius);
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  font-size: var(--field-fs);
   color: var(--db-text);
   box-shadow: none;
   transition:
     border-color 160ms var(--db-ease),
-    background 160ms var(--db-ease),
-    box-shadow 160ms var(--db-ease);
+    background   160ms var(--db-ease),
+    box-shadow   160ms var(--db-ease);
 }
 
-/* Dropdown needs its own selector for border-radius alignment */
-.field .p-dropdown {
-  display: flex;
-  align-items: center;
-}
-
-/* Focus states */
 .field .p-inputtext:enabled:focus,
-.field .p-dropdown:not(.p-disabled).p-focus,
 .field .p-password input:enabled:focus {
   border-color: var(--db-accent);
   background: #ffffff;
@@ -976,21 +969,128 @@
   outline: none;
 }
 
-/* Textarea — same look but no fixed height */
+/* Password wrapper & toggle icon spacing */
+.field .p-password {
+  width: 100%;
+}
+.field .p-password input {
+  padding-right: 42px;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Dropdown — shell + inner label + trigger icon
+────────────────────────────────────────────────────────── */
+
+/* Outer shell — same size/shape as InputText */
+.field .p-dropdown {
+  width: 100%;
+  min-height: var(--field-height);
+  border-radius: var(--field-radius);
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  transition:
+    border-color 160ms var(--db-ease),
+    background   160ms var(--db-ease),
+    box-shadow   160ms var(--db-ease);
+}
+
+.field .p-dropdown:not(.p-disabled):hover {
+  border-color: color-mix(in srgb, var(--db-accent) 40%, var(--field-border));
+}
+
+.field .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--db-accent);
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(var(--db-accent-rgb), 0.10);
+  outline: none;
+}
+
+/* Inner label — carries the selected text */
+.field .p-dropdown .p-dropdown-label {
+  padding: var(--field-py) var(--field-px);
+  font-size: var(--field-fs);
+  color: var(--db-text);
+  background: transparent;
+  border: none;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+/* Placeholder text */
+.field .p-dropdown .p-dropdown-label.p-placeholder {
+  color: var(--db-faint);
+}
+
+/* Chevron trigger button */
+.field .p-dropdown .p-dropdown-trigger {
+  width: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--db-muted);
+  background: transparent;
+  border: none;
+  border-radius: 0 var(--field-radius) var(--field-radius) 0;
+  padding: 0;
+}
+
+/* ── Dropdown panel (overlay) ── */
+.p-dropdown-panel {
+  border-radius: 14px;
+  border: 1px solid var(--db-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10), 0 2px 6px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.p-dropdown-panel .p-dropdown-items-wrapper {
+  border-radius: 14px;
+}
+
+.p-dropdown-panel .p-dropdown-item {
+  padding: 9px 14px;
+  font-size: 0.9rem;
+  color: var(--db-text);
+  border-radius: 0;
+  transition: background 120ms ease;
+}
+
+.p-dropdown-panel .p-dropdown-item:hover {
+  background: var(--db-surface-3);
+  color: var(--db-text);
+}
+
+.p-dropdown-panel .p-dropdown-item.p-highlight {
+  background: var(--db-accent-soft);
+  color: var(--db-accent);
+  font-weight: 600;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Textarea
+────────────────────────────────────────────────────────── */
 .field .p-inputtextarea {
   width: 100%;
-  padding: 11px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--db-border-mid);
-  background: #fafafa;
-  font-size: 0.95rem;
+  padding: var(--field-py) var(--field-px);
+  border-radius: var(--field-radius);
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  font-size: var(--field-fs);
   color: var(--db-text);
   box-shadow: none;
   resize: none;
   transition:
     border-color 160ms var(--db-ease),
-    background 160ms var(--db-ease),
-    box-shadow 160ms var(--db-ease);
+    background   160ms var(--db-ease),
+    box-shadow   160ms var(--db-ease);
 }
 
 .field .p-inputtextarea:enabled:focus {
@@ -1000,21 +1100,13 @@
   outline: none;
 }
 
-/* Calendar input — left side of the pair */
+/* ──────────────────────────────────────────────────────────
+   Calendar — left side of pair retains radius on open side only
+────────────────────────────────────────────────────────── */
 .field .p-calendar { width: 100%; }
 .field .p-calendar .p-inputtext {
-  border-radius: 14px 0 0 14px;
-  min-height: 46px;
-}
-
-/* Password toggle icon alignment */
-.field .p-password {
-  width: 100%;
-}
-
-.field .p-password .p-password-input {
-  width: 100%;
-  padding-right: 42px; /* room for toggle icon */
+  border-radius: var(--field-radius) 0 0 var(--field-radius);
+  min-height: var(--field-height);
 }
 
 /* =========================================================
