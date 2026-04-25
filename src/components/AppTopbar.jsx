@@ -11,11 +11,16 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
-  const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : "CF";
+  const initials = userEmail ? userEmail.slice(0, 2).toUpperCase() : "AM";
+
+  const truncatedEmail =
+    userEmail && userEmail.length > 28
+      ? userEmail.slice(0, 28) + "\u2026"
+      : userEmail || "Account";
 
   const menuItems = [
     {
-      label: userEmail || "Account",
+      label: truncatedEmail,
       items: [
         {
           label: "Dashboard",
@@ -39,13 +44,12 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
           text
           rounded
           aria-label="Toggle navigation"
-          // className="shell-topbar__menu"
           className="db-btn-primary"
           onClick={onMenuClick}
         />
 
         <button className="shell-brand shell-brand--mobile" onClick={() => navigate("/dashboard")}>
-          <span className="shell-brand__mark">CF</span>
+          <span className="shell-brand__mark">AM</span>
           <span className="shell-brand__text">{APP_NAME}</span>
         </button>
       </div>
@@ -55,7 +59,6 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
           label="New"
           icon="pi pi-plus"
           size="small"
-          // className="shell-topbar__new"
           className="db-btn-primary"
           onClick={onCreateClick}
         />
