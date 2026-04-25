@@ -59,7 +59,6 @@ function getNextStep(item) {
 }
 
 export default function ApplicationsPage() {
-  const { logout } = useAuth();
   const toast = useRef(null);
 
   const [items, setItems] = useState([]);
@@ -207,16 +206,8 @@ export default function ApplicationsPage() {
                   label="New"
                   icon="pi pi-plus"
                   size="small"
-                    // className="db-btn-new"
                   className="db-btn-primary"
                   onClick={() => setCreateOpen(true)}
-                />
-                  <Button
-                  label="Logout"
-                  icon="pi pi-sign-out"
-                  text
-                  size="small"
-                  onClick={logout}
                 />
               </div>
             </div>
@@ -227,7 +218,7 @@ export default function ApplicationsPage() {
                 <InputText
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
-                  placeholder="Search title, company, recruiter, notes, source…"
+                  placeholder="Search title, company, recruiter, notes, source\u2026"
                   className="db-search__input"
                 />
                 {searchInput && (
@@ -335,8 +326,8 @@ export default function ApplicationsPage() {
                               {(item.jobType || item.source) && (
                                 <span className="db-inline-meta">
                                   <i className="pi pi-tag" />
-                                  {jobTypeLabelMap[item.jobType] || item.jobType || "—"}
-                                  {item.source ? ` · ${sourceLabelMap[item.source] || item.source}` : ""}
+                                  {jobTypeLabelMap[item.jobType] || item.jobType || "\u2014"}
+                                  {item.source ? ` \u00b7 ${sourceLabelMap[item.source] || item.source}` : ""}
                                 </span>
                               )}
                             </div>
@@ -393,7 +384,7 @@ export default function ApplicationsPage() {
                         <div className="db-mini-stat">
                           <span className="db-mini-stat__label">Updated</span>
                           <span className="db-mini-stat__value">
-                            {formatDate(item.updatedAt || item.createdAt) || "—"}
+                            {formatDate(item.updatedAt || item.createdAt) || "\u2014"}
                           </span>
                         </div>
                       </div>
@@ -410,13 +401,13 @@ export default function ApplicationsPage() {
                             <div className="db-expand-block">
                               <div className="db-expand-block__label">Timeline</div>
                               <div className="db-expand-block__value">
-                                Applied: {formatDate(item.appliedDate) || "—"}
+                                Applied: {formatDate(item.appliedDate) || "\u2014"}
                               </div>
                               <div className="db-expand-block__value">
-                                Follow-up: {formatDate(item.followupDate) || "—"}
+                                Follow-up: {formatDate(item.followupDate) || "\u2014"}
                               </div>
                               <div className="db-expand-block__value">
-                                Interview: {formatDate(item.interviewDate) || "—"}
+                                Interview: {formatDate(item.interviewDate) || "\u2014"}
                               </div>
                             </div>
 
@@ -433,13 +424,13 @@ export default function ApplicationsPage() {
                             <div className="db-expand-block">
                               <div className="db-expand-block__label">Application</div>
                               <div className="db-expand-block__value">
-                                Source: {sourceLabelMap[item.source] || item.source || "—"}
+                                Source: {sourceLabelMap[item.source] || item.source || "\u2014"}
                               </div>
                               <div className="db-expand-block__value">
-                                Type: {jobTypeLabelMap[item.jobType] || item.jobType || "—"}
+                                Type: {jobTypeLabelMap[item.jobType] || item.jobType || "\u2014"}
                               </div>
                               <div className="db-expand-block__value">
-                                Created: {formatDate(item.createdAt) || "—"}
+                                Created: {formatDate(item.createdAt) || "\u2014"}
                               </div>
                             </div>
                           </div>
