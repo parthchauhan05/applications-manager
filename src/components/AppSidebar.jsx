@@ -21,7 +21,7 @@ const NAV_SECTIONS = [
         label: "Applications",
         icon: "pi-briefcase",
         path: "/applications",
-        badge: null, // set dynamically in future e.g. { value: 4, severity: "info" }
+        badge: null,
       },
       {
         id: "calendar",
@@ -86,21 +86,36 @@ const NAV_SECTIONS = [
 ];
 
 const BOTTOM_ITEMS = [
-  { id: "settings", label: "Settings", icon: "pi-cog",          path: "/settings" },
-  { id: "help",     label: "Help",     icon: "pi-question-circle", path: "/help",  soon: true },
+  { id: "settings", label: "Settings", icon: "pi-cog",           path: "/settings" },
+  { id: "help",     label: "Help",     icon: "pi-question-circle", path: "/help", soon: true },
 ];
+
+/** Derive up-to-2-character initials from a display name or email. */
+function getInitials(name, email) {
+  if (name && name.trim()) {
+    const parts = name.trim().split(/\s+/);
+    return parts.length >= 2
+      ? (parts[0][0] + parts[1][0]).toUpperCase()
+      : parts[0].slice(0, 2).toUpperCase();
+  }
+  return email ? email.slice(0, 2).toUpperCase() : "AM";
+}
 
 export default function AppSidebar({ collapsed = false }) {
   const navigate  = useNavigate();
   const location  = useLocation();
-  const { userEmail, logout } = useAuth();
+  const { userEmail, userName, logout } = useAuth();
 
   const [hoveredId, setHoveredId] = useState(null);
 
-  const initials   = userEmail ? userEmail.slice(0, 2).toUpperCase() : "AM";
-  const shortEmail = userEmail
+  const initials    = getInitials(userName, userEmail);
+  const displayName = userName || userEmail?.split("@")[0] || "Account";
+  const shortName   = displayName.length > 22
+    ? displayName.slice(0, 22) + "\u2026"
+    : displayName;
+  const shortEmail  = userEmail
     ? userEmail.length > 22 ? userEmail.slice(0, 22) + "\u2026" : userEmail
-    : "user@example.com";
+    : "";
 
   const isActive = (path) => location.pathname === path;
 
@@ -128,14 +143,14 @@ export default function AppSidebar({ collapsed = false }) {
             )}
 
             {section.items.map((item) => {
-              const active = isActive(item.path);
+              const active  = isActive(item.path);
               const hovered = hoveredId === item.id;
 
               return (
                 <button
                   key={item.id}
                   className={`psb__item
-                    ${active  ? "psb__item--active"   : ""}
+                    ${active   ? "psb__item--active"  : ""}
                     ${item.soon ? "psb__item--soon"   : ""}
                     ${hovered && !active ? "psb__item--hovered" : ""}
                   `}
@@ -222,7 +237,7 @@ export default function AppSidebar({ collapsed = false }) {
           <button
             className="psb__avatar-btn"
             onClick={logout}
-            data-pr-tooltip="Logout"
+            data-pr-tooltip={`${displayName} — Logout`}
             data-pr-position="right"
             aria-label="Logout"
           >
@@ -232,7 +247,7 @@ export default function AppSidebar({ collapsed = false }) {
           <div className="psb__account">
             <span className="psb__avatar">{initials}</span>
             <div className="psb__account-info">
-              <div className="psb__account-name">{initials}</div>
+              <div className="psb__account-name">{shortName}</div>
               <div className="psb__account-email">{shortEmail}</div>
             </div>
             <button

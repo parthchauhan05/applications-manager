@@ -8,6 +8,7 @@ export const APP_NAME: string = "Applications Manager";
 export const STORAGE_KEYS = {
   token: "token",
   userEmail: "userEmail",
+  userName: "userName",
 };
 
 export const APPLICATION_STATUS = {
