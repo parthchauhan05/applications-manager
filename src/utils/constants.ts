@@ -3,7 +3,7 @@ type dropdownItemType = {
   value: string
 }
 
-export const APP_NAME: string = "CareerFlow";
+export const APP_NAME: string = "Applications Manager";
 
 export const STORAGE_KEYS = {
   token: "token",
