@@ -34,29 +34,65 @@ export default function RegisterPage() {
 
   return (
     <div className="auth-shell">
-      <div className="auth-panel">
-        <div className="auth-panel__intro">
-          <div className="auth-panel__mark">CF</div>
-          <div className="auth-panel__eyebrow">{APP_NAME}</div>
-          <h1 className="auth-panel__title">Create your account.</h1>
-          <p className="auth-panel__text">
-            Start tracking your job search with a quieter, more usable dashboard.
-          </p>
-        </div>
 
+      {/* ── Left hero ── */}
+      <div className="auth-hero">
+        <div className="auth-hero__mark">CF</div>
+        <div className="auth-hero__eyebrow">{APP_NAME}</div>
+        <h1 className="auth-hero__title">Your search, organised.</h1>
+        <p className="auth-hero__text">
+          Start tracking your job search with a quieter, more usable dashboard. Everything in one place, zero clutter.
+        </p>
+
+        <div className="auth-hero__features">
+          <div className="auth-hero__feature">
+            <div className="auth-hero__feature-icon">
+              <i className="pi pi-bolt" />
+            </div>
+            <div className="auth-hero__feature-text">
+              <strong>Up and running in seconds</strong>
+              <span>Create an account and log your first application in under a minute.</span>
+            </div>
+          </div>
+
+          <div className="auth-hero__feature">
+            <div className="auth-hero__feature-icon">
+              <i className="pi pi-filter" />
+            </div>
+            <div className="auth-hero__feature-text">
+              <strong>Filter, search, and sort</strong>
+              <span>Find any application instantly with live search and status filters.</span>
+            </div>
+          </div>
+
+          <div className="auth-hero__feature">
+            <div className="auth-hero__feature-icon">
+              <i className="pi pi-shield" />
+            </div>
+            <div className="auth-hero__feature-text">
+              <strong>Your data, private</strong>
+              <span>Each account is fully isolated. Nobody else sees your applications.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Right form panel ── */}
+      <div className="auth-form-panel">
         <form className="auth-card" onSubmit={submit}>
           <div className="auth-card__header">
-            <h2>Register</h2>
-            <p>Create your workspace in a minute.</p>
+            <h2>Create account</h2>
+            <p>Get your workspace set up in a minute.</p>
           </div>
 
           <div className="field">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Full name</label>
             <InputText
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Your name"
+              autoComplete="name"
             />
           </div>
 
@@ -64,9 +100,11 @@ export default function RegisterPage() {
             <label htmlFor="register-email">Email</label>
             <InputText
               id="register-email"
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              autoComplete="email"
             />
           </div>
 
@@ -80,7 +118,8 @@ export default function RegisterPage() {
               toggleMask
               className="w-full"
               inputClassName="w-full"
-              placeholder="Create password"
+              placeholder="Create a password"
+              autoComplete="new-password"
             />
           </div>
 
@@ -88,18 +127,18 @@ export default function RegisterPage() {
 
           <Button
             type="submit"
-            label={loading ? "Creating..." : "Register"}
+            label={loading ? "Creating account…" : "Create account"}
             loading={loading}
-            // className="auth-card__submit"
-            className="db-btn-primary"
+            className="auth-card__submit"
           />
 
           <div className="auth-card__switch">
             <span>Already have an account?</span>
-            <Link to="/login">Login</Link>
+            <Link to="/login">Sign in</Link>
           </div>
         </form>
       </div>
+
     </div>
   );
 }
