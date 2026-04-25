@@ -10,7 +10,7 @@ export default function NotFoundPage() {
         <div className="notfound-card__code">404</div>
         <h1>Page not found</h1>
         <p>The page you are looking for does not exist or has been moved.</p>
-        <Button label="Go to dashboard" onClick={() => navigate("/dashboard")} />
+        <Button label="Go to dashboard" className="db-btn-primary" onClick={() => navigate("/dashboard")} />
       </div>
     </div>
   );

@@ -90,7 +90,8 @@ export default function RegisterPage() {
             type="submit"
             label={loading ? "Creating..." : "Register"}
             loading={loading}
-            className="auth-card__submit"
+            // className="auth-card__submit"
+            className="db-btn-primary"
           />
 
           <div className="auth-card__switch">

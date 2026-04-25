@@ -67,10 +67,11 @@ export default function ApplicationFormDialog({ visible, onHide, onSave, initial
 
   const footer = (
     <div className="app-dialog__footer">
-      <Button label="Cancel" severity="secondary" text onClick={onHide} />
+      <Button label="Cancel" severity="secondary" className="db-btn-secondary" text onClick={onHide} />
       <Button
         label={isEdit ? "Save changes" : "Create application"}
         icon={isEdit ? "pi pi-check" : "pi pi-plus"}
+        className="db-btn-primary"
         onClick={() => onSave(form)}
       />
     </div>

@@ -2,11 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>careerflow</title>
+    <title>Career Flow</title>
+
+    <script>
+      (function () {
+        try {
+          var DEFAULT_ACCENT = "#4f46e5";
+          var savedAccent = localStorage.getItem("careerflow.accentColor");
+          var accent = /^#([0-9A-F]{3}|[0-9A-F]{6})$/i.test(savedAccent || "")
+            ? savedAccent
+            : DEFAULT_ACCENT;
+
+          function hexToRgb(hex) {
+            var clean = hex.replace("#", "");
+            if (clean.length === 3) {
+              clean = clean.split("").map(function (c) { return c + c; }).join("");
+            }
+            var num = parseInt(clean, 16);
+            return {
+              r: (num >> 16) & 255,
+              g: (num >> 8) & 255,
+              b: num & 255
+            };
+          }
+
+          var rgb = hexToRgb(accent);
+          var root = document.documentElement;
+
+          root.style.setProperty("--db-accent", accent);
+          root.style.setProperty("--db-accent-rgb", rgb.r + ", " + rgb.g + ", " + rgb.b);
+          root.style.setProperty("--db-accent-soft", "rgba(" + rgb.r + ", " + rgb.g + ", " + rgb.b + ", 0.09)");
+        } catch (e) {}
+      })();
+    </script>
   </head>
-  <body style="margin: 0;">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

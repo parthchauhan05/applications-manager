@@ -39,7 +39,8 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
           text
           rounded
           aria-label="Toggle navigation"
-          className="shell-topbar__menu"
+          // className="shell-topbar__menu"
+          className="db-btn-primary"
           onClick={onMenuClick}
         />
 
@@ -54,7 +55,8 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
           label="New"
           icon="pi pi-plus"
           size="small"
-          className="shell-topbar__new"
+          // className="shell-topbar__new"
+          className="db-btn-primary"
           onClick={onCreateClick}
         />
 

@@ -3,26 +3,30 @@
    Add this at the end of dashboard.css
 ========================================================= */
 :root {
-  --db-bg: #eef2f7;
+  --db-bg: #f6f7f9;
   --db-surface: #ffffff;
-  --db-surface-alt: #f6f8fc;
-  --db-surface-alt-2: #edf2f7;
-
-  --db-border: rgba(15, 23, 42, 0.14);
-  --db-border-mid: rgba(15, 23, 42, 0.2);
-
+  --db-border: rgba(15,23,42,.07);
+  --db-border-mid: rgba(15,23,42,.11);
   --db-text: #1e2330;
-  --db-muted: #667085;
-  --db-faint: #98a2b3;
+  --db-muted: #7c8494;
+  --db-faint: #b5bac4;
 
   --db-accent: #4f46e5;
-  --db-accent-soft: rgba(79, 70, 229, 0.1);
+  --db-accent-rgb: 79, 70, 229;
+  --db-accent-soft: rgba(79,70,229,.09);
+  --db-accent-soft-strong: rgba(79,70,229,.14);
+  --db-accent-border: rgba(79,70,229,.28);
+  --db-accent-contrast: #ffffff;
+
+  --primary-color: var(--db-accent);
+  --primary-color-text: var(--db-accent-contrast);
+  --highlight-bg: rgba(var(--db-accent-rgb), 0.12);
+  --highlight-text-color: var(--db-accent);
 
   --db-radius-sm: 10px;
   --db-radius-md: 16px;
   --db-radius-lg: 22px;
-
-  --db-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --db-ease: cubic-bezier(0.16,1,0.3,1);
   --db-speed: 160ms;
 }
 
@@ -391,4 +395,57 @@
     padding-left: 12px;
     padding-right: 12px;
   }
+}
+
+.db-btn-new.p-button {
+  background: var(--db-accent);
+  border-color: var(--db-accent);
+  color: var(--db-accent-contrast);
+  padding: 8px 16px;
+}
+
+.db-btn-new.p-button:hover {
+  background: color-mix(in srgb, var(--db-accent) 88%, black);
+  border-color: color-mix(in srgb, var(--db-accent) 88%, black);
+  box-shadow: 0 4px 14px rgba(var(--db-accent-rgb), 0.28);
+}
+
+.db-search__input.p-inputtext:focus {
+  border-color: var(--db-accent);
+  background: var(--db-surface);
+  box-shadow: 0 0 0 3px rgba(var(--db-accent-rgb), 0.10);
+}
+
+.db-chip:hover {
+  border-color: var(--db-accent);
+  color: var(--db-accent);
+  background: var(--db-accent-soft);
+}
+
+.db-chip--active {
+  border-color: var(--db-accent);
+  background: var(--db-accent-soft);
+  color: var(--db-accent);
+}
+
+.db-item__avatar,
+.db-app-card__avatar,
+.db-kpi__icon {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--db-accent) 14%, white),
+    color-mix(in srgb, var(--db-accent) 24%, white)
+  );
+  color: var(--db-accent);
+}
+
+.db-row-icon-btn:hover,
+.db-row-icon-btn.is-active {
+  background: var(--db-accent-soft);
+  border-color: var(--db-accent);
+  color: var(--db-accent);
+}
+
+.db-inline-link {
+  color: var(--db-accent);
 }

@@ -207,10 +207,11 @@ export default function ApplicationsPage() {
                   label="New"
                   icon="pi pi-plus"
                   size="small"
-                  className="db-btn-new"
+                    // className="db-btn-new"
+                  className="db-btn-primary"
                   onClick={() => setCreateOpen(true)}
                 />
-                <Button
+                  <Button
                   label="Logout"
                   icon="pi pi-sign-out"
                   text

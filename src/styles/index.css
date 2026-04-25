@@ -2,10 +2,51 @@
 @import "primereact/resources/primereact.min.css";
 @import "primereact/resources/themes/lara-light-blue/theme.css";
 @import "primeicons/primeicons.css";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html,
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6,
+.db-board__title,
+.app-dialog__title,
+.shell-brand__text,
+.psb__app-name,
+.auth-panel__title,
+.auth-card__header h2,
+.notfound-card h1 {
+  font-family: var(--font-heading);
+}
+
+body,
+p,
+button,
+input,
+textarea,
+select,
+.db-board__sub,
+.db-inline-meta,
+.db-mini-stat__value,
+.db-expand-block__value,
+.db-expand-block__muted,
+.db-expand-notes p,
+.field label,
+.p-component {
+  font-family: var(--font-body);
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
@@ -59,7 +100,6 @@
 }
 
 #root {
-  width: 1126px;
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -76,8 +116,6 @@ body {
 
 h1,
 h2 {
-  font-family: var(--heading);
-  font-weight: 500;
   color: var(--text-h);
 }
 
@@ -105,7 +143,6 @@ p {
 
 code,
 .counter {
-  font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
   color: var(--text-h);

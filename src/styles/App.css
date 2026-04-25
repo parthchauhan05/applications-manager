@@ -39,14 +39,15 @@
 
 .shell-topbar__new.p-button {
   border-radius: 10px;
-  background: #4f46e5;
-  border-color: #4f46e5;
-  padding-inline: 14px;
+  background: var(--db-accent);
+  border-color: var(--db-accent);
+  color: var(--db-accent-contrast);
+  padding: 8px 16px;
 }
 
 .shell-topbar__new.p-button:hover {
-  background: #4338ca;
-  border-color: #4338ca;
+  background: color-mix(in srgb, var(--db-accent) 88%, black);
+  border-color: color-mix(in srgb, var(--db-accent) 88%, black);
 }
 
 .shell-brand {
@@ -79,6 +80,19 @@
   letter-spacing: -0.02em;
 }
 
+.shell-brand__mark,
+.shell-sidebar__account-avatar,
+.psb__mark,
+.psb__avatar,
+.auth-panel__mark {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--db-accent) 14%, white),
+    color-mix(in srgb, var(--db-accent) 24%, white)
+  );
+  color: var(--db-accent);
+}
+
 .shell-profile {
   border: none;
   background: transparent;
@@ -87,8 +101,8 @@
 }
 
 .shell-profile__avatar {
-  background: #eef2ff;
-  color: #4338ca;
+  background: color-mix(in srgb, var(--db-accent) 10%, white);
+  color: var(--db-accent);
   font-weight: 700;
 }
 
@@ -206,8 +220,8 @@
 }
 
 .shell-sidebar__nav-item.is-active {
-  background: #eef2ff;
-  color: #4338ca;
+  background: var(--db-accent-soft);
+  color: var(--db-accent);
   font-weight: 600;
 }
 
@@ -544,6 +558,10 @@
 .auth-card__submit.p-button {
   margin-top: 4px;
   border-radius: 10px;
+  padding: 8px 16px;
+  background: var(--db-accent);
+  border-color: var(--db-accent);
+  color: var(--db-accent-contrast);
 }
 
 .auth-card__switch {
@@ -623,8 +641,8 @@
 .field .p-inputtext:enabled:focus,
 .field .p-dropdown:not(.p-disabled).p-focus,
 .field .p-password input:enabled:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  border-color: var(--db-accent);
+  box-shadow: 0 0 0 3px rgba(var(--db-accent-rgb), 0.10);
 }
 
 /* =========================================================
@@ -695,7 +713,7 @@
 }
 
 .psb__brand-btn:hover {
-  background: #f5f3ff;
+  background: color-mix(in srgb, var(--db-accent) 8%, white);
 }
 
 .psb__mark {
@@ -781,14 +799,14 @@
 }
 
 .psb__item--active {
-  background: #eef2ff;
-  color: #4338ca;
+  background: var(--db-accent-soft);
+  color: var(--db-accent);
   font-weight: 600;
 }
 
 .psb__item--active .psb__item-icon {
-  color: #4f46e5;
-}
+  color: var(--db-accent);
+  background: rgba(var(--db-accent-rgb), 0.12);}
 
 .psb__item--soon {
   cursor: default;
@@ -847,8 +865,8 @@
   font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: #a78bfa;
-  background: #f5f3ff;
+  color: var(--db-accent);
+  background: color-mix(in srgb, var(--db-accent) 10%, white);
   padding: 2px 7px;
   border-radius: 100px;
   text-transform: uppercase;
@@ -858,7 +876,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #4f46e5;
+  background: var(--db-accent);
 }
 
 /* ── Bottom ── */
@@ -992,3 +1010,77 @@
 .shell--sidebar-closed .shell-sidebar-rail { width: 64px;  }
 .shell--sidebar-open  .shell-sidebar-persistent { width: 240px; }
 .shell--sidebar-closed .shell-sidebar-persistent { width: 64px; }
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.db-btn-primary.p-button,
+.db-btn-new.p-button {
+  background: var(--db-accent);
+  border-color: var(--db-accent);
+  color: #ffffff;
+  border-radius: var(--db-radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  transition:
+    background var(--db-speed) var(--db-ease),
+    border-color var(--db-speed) var(--db-ease),
+    box-shadow var(--db-speed) var(--db-ease),
+    transform var(--db-speed) var(--db-ease);
+}
+
+.db-btn-primary.p-button:hover,
+.db-btn-new.p-button:hover {
+  background: color-mix(in srgb, var(--db-accent) 88%, black);
+  border-color: color-mix(in srgb, var(--db-accent) 88%, black);
+  box-shadow: 0 4px 14px rgba(var(--db-accent-rgb), 0.24);
+  transform: translateY(-1px);
+}
+
+.db-btn-primary.p-button:active,
+.db-btn-new.p-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.db-btn-primary.p-button:focus-visible,
+.db-btn-new.p-button:focus-visible {
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 0 4px rgba(var(--db-accent-rgb), 0.18);
+}
+
+/* Secondary = link-style */
+.db-btn-secondary.p-button,
+.db-btn-link.p-button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--db-accent);
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.db-btn-secondary.p-button:hover,
+.db-btn-link.p-button:hover {
+  background: transparent;
+  border-color: transparent;
+  color: color-mix(in srgb, var(--db-accent) 82%, black);
+  text-decoration: underline;
+  box-shadow: none;
+}
+
+.db-btn-secondary.p-button:focus-visible,
+.db-btn-link.p-button:focus-visible {
+  outline: 2px solid rgba(var(--db-accent-rgb), 0.22);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.db-btn-secondary.p-button .p-button-label,
+.db-btn-link.p-button .p-button-label {
+  font-weight: 600;
+}

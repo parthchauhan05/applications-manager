@@ -79,7 +79,8 @@ export default function LoginPage() {
             type="submit"
             label={loading ? "Signing in..." : "Login"}
             loading={loading}
-            className="auth-card__submit"
+            // className="auth-card__submit"
+            className="db-btn-primary"
           />
 
           <div className="auth-card__switch">

@@ -189,6 +189,7 @@ export default function DashboardPage() {
                   <p className="db-board__sub">Last 5 applications added</p>
                 </div>
                 <Button
+                  className="db-btn-primary"
                   label="View all"
                   icon="pi pi-arrow-right"
                   iconPos="right"
@@ -209,7 +210,8 @@ export default function DashboardPage() {
                   <div className="db-empty__icon"><i className="pi pi-inbox" /></div>
                   <h3>No applications yet</h3>
                   <p>Create your first application to start tracking your pipeline.</p>
-                  <Button
+                    <Button
+                      className="db-btn-primary"
                     label="Add Application"
                     icon="pi pi-plus"
                     size="small"
