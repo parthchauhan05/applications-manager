@@ -6,6 +6,7 @@ import { useSettings } from "../context/SettingsContext";
 import "../styles/dashboard.css";
 import "../styles/settings.css";
 import { Button } from "primereact/button";
+import LinkedEmailsSection from "../components/LinkedEmailsSection";
 
 const PRESET_COLORS = [
   "#4f46e5",
@@ -77,8 +78,8 @@ export default function SettingsPage() {
           <div className="db-board">
             <div className="db-board__header">
               <div>
-                <p className="settings-eyebrow">Appearance</p>
-                <h2 className="db-board__title">Accent color</h2>
+                <p className="settings-eyebrow">Settings</p>
+                <h2 className="db-board__title">Preferences</h2>
                 <p className="db-board__sub">
                   Choose the accent color for interactive UI elements across the app.
                 </p>
@@ -180,7 +181,8 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </div>
-              </section>
+                          </section>
+                          <LinkedEmailsSection />
             </div>
           </div>
         </div>
