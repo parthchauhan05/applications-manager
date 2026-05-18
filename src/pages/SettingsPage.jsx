@@ -6,7 +6,6 @@ import { useSettings } from "../context/SettingsContext";
 import "../styles/dashboard.css";
 import "../styles/settings.css";
 import { Button } from "primereact/button";
-import LinkedEmailsSection from "../components/LinkedEmailsSection";
 import ConnectedGmailSection from "../components/ConnectedGmailSection";
 
 const PRESET_COLORS = [
@@ -183,7 +182,6 @@ export default function SettingsPage() {
                   </div>
                 </div>
                           </section>
-              <LinkedEmailsSection />
               <ConnectedGmailSection />
             </div>
           </div>

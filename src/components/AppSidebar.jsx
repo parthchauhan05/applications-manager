@@ -86,7 +86,8 @@ const NAV_SECTIONS = [
 ];
 
 const BOTTOM_ITEMS = [
-  { id: "settings", label: "Settings", icon: "pi-cog",           path: "/settings" },
+  { id: "settings", label: "Settings", icon: "pi-cog", path: "/settings" },
+  { id: "privacy", label: "Privacy policy", icon: "pi-shield", path: "/privacy" },
   { id: "help",     label: "Help",     icon: "pi-question-circle", path: "/help", soon: true },
 ];
 

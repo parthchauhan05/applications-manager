@@ -5,55 +5,62 @@ import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { gmailService } from "../services/gmailService";
 
-function useQuery() {
-  const { search } = useLocation();
-  return new URLSearchParams(search);
-}
-
 export default function ConnectedGmailSection() {
   const toast = useRef(null);
-const location = useLocation();
-const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
-    const gmailLinkedFlag = query.get("gmailLinked");
-    const [accounts, setAccounts] = useState([]);
+  const location = useLocation();
+  const query = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
+  const gmailLinkedFlag = query.get("gmailLinked");
+
+  const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
+  const [removingEmail, setRemovingEmail] = useState(null);
 
-  // Load connected accounts on mount
-  useEffect(() => {
+  // ── Load accounts ────────────────────────────────────────────────────
+  const loadAccounts = () => {
     gmailService
       .getAccounts()
       .then((res) => setAccounts(res.data || []))
-      .catch(() => {})
+      .catch(() =>
+        toast.current?.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Could not load Gmail accounts.",
+          life: 3000,
+        })
+      )
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    loadAccounts();
   }, []);
 
-  // Show success toast if redirected back from Google OAuth
+  // ── Handle redirect back from Google OAuth ───────────────────────────
   useEffect(() => {
-  if (gmailLinkedFlag === "1") {
-    toast.current?.show({
-      severity: "success",
-      summary: "Gmail connected",
-      detail: "Your Gmail account was linked successfully.",
-      life: 3000,
-    });
+    if (gmailLinkedFlag === "1") {
+      toast.current?.show({
+        severity: "success",
+        summary: "Gmail connected",
+        detail: "Your Gmail account was linked successfully.",
+        life: 3000,
+      });
+      window.history.replaceState({}, "", "/settings");
+      gmailService
+        .getAccounts()
+        .then((res) => setAccounts(res.data || []))
+        .catch(() => {});
+    }
+  }, [gmailLinkedFlag]);
 
-    // Clean up query string
-    window.history.replaceState({}, "", "/settings");
-
-    // Re-fetch accounts once, now that we know link succeeded
-    gmailService
-      .getAccounts()
-      .then((res) => setAccounts(res.data || []))
-      .catch(() => {});
-  }
-}, [gmailLinkedFlag]); // ← depends only on the string, not on the whole query object
-
+  // ── Connect new account ──────────────────────────────────────────────
   const handleConnect = async () => {
     setConnecting(true);
     try {
       const res = await gmailService.getAuthUrl();
-      // Backend returns plain string URL, not { url: "..." }
       window.location.href = res.data;
     } catch {
       toast.current?.show({
@@ -66,6 +73,30 @@ const query = useMemo(() => new URLSearchParams(location.search), [location.sear
     }
   };
 
+  // ── Remove account ───────────────────────────────────────────────────
+  const handleRemove = async (email) => {
+    setRemovingEmail(email);
+    try {
+      await gmailService.removeAccount(email);
+      setAccounts((prev) => prev.filter((a) => a.email !== email));
+      toast.current?.show({
+        severity: "success",
+        summary: "Account removed",
+        detail: `${email} has been disconnected.`,
+        life: 2500,
+      });
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: `Could not remove ${email}. Try again.`,
+        life: 3000,
+      });
+    } finally {
+      setRemovingEmail(null);
+    }
+  };
+
   return (
     <>
       <Toast ref={toast} position="bottom-right" />
@@ -74,11 +105,12 @@ const query = useMemo(() => new URLSearchParams(location.search), [location.sear
         <div className="settings-card__head">
           <h3>Gmail automation</h3>
           <p>
-            Connect a Gmail account to automatically detect job applications,
-            interviews, and rejections from your inbox.
+            Connect one or more Gmail accounts to automatically detect job
+            applications, interviews, and rejections from your inbox.
           </p>
         </div>
 
+        {/* ── Accounts list ── */}
         {loading ? (
           <div className="linked-emails__list">
             <div className="skeleton skeleton-text" style={{ width: "60%" }} />
@@ -88,19 +120,39 @@ const query = useMemo(() => new URLSearchParams(location.search), [location.sear
         ) : (
           <ul className="linked-emails__list">
             {accounts.map((account) => (
-              <li key={account.id} className="linked-emails__item">
+              <li key={account.email} className="linked-emails__row">
                 <span className="linked-emails__icon">
                   <i className="pi pi-envelope" />
                 </span>
-                <span className="linked-emails__address">{account.email}</span>
+                <div className="linked-emails__info">
+                  <span className="linked-emails__address">{account.email}</span>
+                  {account.linkedAt && (
+                    <span className="linked-emails__label">
+                      Connected {new Date(account.linkedAt).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
                 <span className="linked-emails__badge linked-emails__badge--active">
                   Active
                 </span>
+                <Button
+                  icon={
+                    removingEmail === account.email
+                      ? "pi pi-spin pi-spinner"
+                      : "pi pi-trash"
+                  }
+                  className="p-button-text p-button-danger p-button-sm linked-emails__remove"
+                  onClick={() => handleRemove(account.email)}
+                  disabled={removingEmail === account.email}
+                  aria-label={`Remove ${account.email}`}
+                  title="Remove"
+                />
               </li>
             ))}
           </ul>
         )}
 
+        {/* ── Connect new account button ── */}
         <div className="linked-emails__actions">
           <Button
             label={connecting ? "Redirecting…" : "Connect Gmail account"}
