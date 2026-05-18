@@ -136,6 +136,16 @@ export default function RegisterPage() {
             <span>Already have an account?</span>
             <Link to="/login">Sign in</Link>
           </div>
+
+          <div className="auth-card__legal">
+            <span className="text-xs text-muted">
+              By signing in you agree to our{" "}
+              <Link to="/privacy" className="underline">
+                Privacy Policy
+              </Link>
+              .
+            </span>
+          </div>
         </form>
       </div>
 

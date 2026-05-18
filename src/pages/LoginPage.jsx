@@ -124,6 +124,16 @@ export default function LoginPage() {
             <span>Don’t have an account?</span>
             <Link to="/register">Create one</Link>
           </div>
+
+          <div className="auth-card__legal">
+            <span className="text-xs text-muted">
+              By signing in you agree to our{" "}
+              <Link to="/privacy" className="underline">
+                Privacy Policy
+              </Link>
+              .
+            </span>
+          </div>
         </form>
       </div>
 
