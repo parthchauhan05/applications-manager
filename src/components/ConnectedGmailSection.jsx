@@ -1,28 +1,60 @@
-import { useEffect, useRef, useState } from "react";
+// src/components/ConnectedGmailSection.jsx
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { gmailService } from "../services/gmailService";
 
+function useQuery() {
+  const { search } = useLocation();
+  return new URLSearchParams(search);
+}
+
 export default function ConnectedGmailSection() {
   const toast = useRef(null);
-  const [accounts, setAccounts] = useState([]);
+const location = useLocation();
+const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
+    const gmailLinkedFlag = query.get("gmailLinked");
+    const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState(false);
 
+  // Load connected accounts on mount
   useEffect(() => {
-    const controller = new AbortController();
-    gmailService.getAccounts()
-      .then(res => setAccounts(res.data || []))
+    gmailService
+      .getAccounts()
+      .then((res) => setAccounts(res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
-    return () => controller.abort();
   }, []);
+
+  // Show success toast if redirected back from Google OAuth
+  useEffect(() => {
+  if (gmailLinkedFlag === "1") {
+    toast.current?.show({
+      severity: "success",
+      summary: "Gmail connected",
+      detail: "Your Gmail account was linked successfully.",
+      life: 3000,
+    });
+
+    // Clean up query string
+    window.history.replaceState({}, "", "/settings");
+
+    // Re-fetch accounts once, now that we know link succeeded
+    gmailService
+      .getAccounts()
+      .then((res) => setAccounts(res.data || []))
+      .catch(() => {});
+  }
+}, [gmailLinkedFlag]); // ← depends only on the string, not on the whole query object
 
   const handleConnect = async () => {
     setConnecting(true);
     try {
       const res = await gmailService.getAuthUrl();
-      window.location.href = res.data.url;  // redirect to Google consent screen
+      // Backend returns plain string URL, not { url: "..." }
+      window.location.href = res.data;
     } catch {
       toast.current?.show({
         severity: "error",
@@ -55,7 +87,7 @@ export default function ConnectedGmailSection() {
           <p className="linked-emails__empty">No Gmail accounts connected yet.</p>
         ) : (
           <ul className="linked-emails__list">
-            {accounts.map(account => (
+            {accounts.map((account) => (
               <li key={account.id} className="linked-emails__item">
                 <span className="linked-emails__icon">
                   <i className="pi pi-envelope" />
