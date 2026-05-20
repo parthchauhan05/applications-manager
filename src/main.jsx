@@ -8,17 +8,20 @@ import "primeflex/primeflex.css";
 import "./styles/App.css";
 import "./styles/dashboard.css";
 import "./styles/applications.css";
-import "./styles/index.css"
+import "./styles/index.css";
 import App from "./App";
 import { AuthProvider } from "./context/AuthContext";
 import { SettingsProvider } from "./context/SettingsContext";
+import { ActiveAccountProvider } from "./context/ActiveAccountContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-    <BrowserRouter>
+  <BrowserRouter>
     <AuthProvider>
       <SettingsProvider>
-        <App />
+        <ActiveAccountProvider>
+          <App />
+        </ActiveAccountProvider>
       </SettingsProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    </AuthProvider>
+  </BrowserRouter>
 );

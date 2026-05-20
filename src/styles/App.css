@@ -1186,6 +1186,23 @@
   font-weight: 600;
 }
 
+.app-topbar__account-dropdown {
+  min-width: 200px;
+}
+
+.app-topbar__account-dropdown .p-dropdown {
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.app-topbar__account-single {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--text-color-secondary, #64748b);
+}
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */

@@ -7,6 +7,7 @@ import ApplicationFormDialog from "../components/ApplicationFormDialog";
 import { applicationService } from "../services/applicationService";
 import { useAuth } from "../context/AuthContext";
 import { APPLICATION_STATUS } from "../utils/constants";
+import { useActiveAccount } from "../context/ActiveAccountContext";
 
 function formatDate(raw) {
   if (!raw) return "—";
@@ -26,6 +27,7 @@ export default function DashboardPage() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const toast = useRef(null);
+  const { activeAccount, loadingAccounts } = useActiveAccount();
 
   const [summary, setSummary] = useState({});
   const [recent, setRecent] = useState([]);
@@ -33,85 +35,87 @@ export default function DashboardPage() {
   const [createOpen, setCreateOpen] = useState(false);
 
   useEffect(() => {
-  const controller = new AbortController();
+    if (loadingAccounts) return;
 
-  const loadData = async () => {
-    setLoading(true);
-    try {
-      const [summaryRes, pageRes] = await Promise.all([
-        applicationService.getSummary(),
-        applicationService.getPage({ page: 0, size: 5 }),
-      ]);
+    const controller = new AbortController();
 
-      if (!controller.signal.aborted) {
-        const pageData = pageRes.data || {};
-        setSummary(summaryRes.data || {});
-        setRecent((pageData.content || []).map(normalizeApplication));
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const [summaryRes, pageRes] = await Promise.all([
+          applicationService.getSummary(activeAccount),
+          applicationService.getPage({ page: 0, size: 5, email: activeAccount }),
+        ]);
+
+        if (!controller.signal.aborted) {
+          const pageData = pageRes.data || {};
+          setSummary(summaryRes.data || {});
+          setRecent((pageData.content || []).map(normalizeApplication));
+        }
+      } catch (err) {
+        if (err.name !== "CanceledError") {
+          toast.current?.show({
+            severity: "error",
+            summary: "Error",
+            detail: "Could not load dashboard.",
+            life: 3000,
+          });
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-    } catch (err) {
-      if (err.name !== "CanceledError") {
-        toast.current?.show({
-          severity: "error",
-          summary: "Error",
-          detail: "Could not load dashboard.",
-          life: 3000,
-        });
-      }
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
-    }
-  };
+    };
 
-  loadData();
-  return () => controller.abort();
-}, []);
+    loadData();
+    return () => controller.abort();
+  }, [activeAccount, loadingAccounts]);
 
   const handleSave = async (form) => {
-  try {
-    await applicationService.create(form);
+    try {
+      await applicationService.create(form);
 
-    const [summaryRes, pageRes] = await Promise.all([
-      applicationService.getSummary(),
-      applicationService.getPage({ page: 0, size: 5 }),
-    ]);
+      const [summaryRes, pageRes] = await Promise.all([
+        applicationService.getSummary(activeAccount),
+        applicationService.getPage({ page: 0, size: 5, email: activeAccount }),
+      ]);
 
-    const pageData = pageRes.data || {};
-    setSummary(summaryRes.data || {});
-    setRecent((pageData.content || []).map(normalizeApplication));
-    setCreateOpen(false);
+      const pageData = pageRes.data || {};
+      setSummary(summaryRes.data || {});
+      setRecent((pageData.content || []).map(normalizeApplication));
+      setCreateOpen(false);
 
-    toast.current?.show({
-      severity: "success",
-      summary: "Added",
-      detail: "Application created.",
-      life: 2200,
-    });
-  } catch {
-    toast.current?.show({
-      severity: "error",
-      summary: "Error",
-      detail: "Could not save application.",
-      life: 3000,
-    });
-  }
-};
+      toast.current?.show({
+        severity: "success",
+        summary: "Added",
+        detail: "Application created.",
+        life: 2200,
+      });
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "Error",
+        detail: "Could not save application.",
+        life: 3000,
+      });
+    }
+  };
 
   const total = summary.TOTAL || Object.values(summary).reduce((s, v) => s + (v || 0), 0) || 0;
 
   const kpis = [
-    { label: "Total",     value: total,                icon: "pi-briefcase",  key: null },
-    { label: "Saved",     value: summary.SAVED || 0,   icon: "pi-bookmark",   key: "SAVED" },
-    { label: "Applied",   value: summary.APPLIED || 0, icon: "pi-send",       key: "APPLIED" },
-    { label: "Interview", value: summary.INTERVIEW || 0,icon: "pi-calendar",  key: "INTERVIEW" },
-    { label: "Offer",     value: summary.OFFER || 0,   icon: "pi-star",       key: "OFFER" },
-    { label: "Rejected",  value: summary.REJECTED || 0,icon: "pi-times",      key: "REJECTED" },
+    { label: "Total", value: total, icon: "pi-briefcase", key: null },
+    { label: "Saved", value: summary.SAVED || 0, icon: "pi-bookmark", key: "SAVED" },
+    { label: "Applied", value: summary.APPLIED || 0, icon: "pi-send", key: "APPLIED" },
+    { label: "Interview", value: summary.INTERVIEW || 0, icon: "pi-calendar", key: "INTERVIEW" },
+    { label: "Offer", value: summary.OFFER || 0, icon: "pi-star", key: "OFFER" },
+    { label: "Rejected", value: summary.REJECTED || 0, icon: "pi-times", key: "REJECTED" },
   ];
 
   const pipeline = [
-    { label: "Applied",   value: summary.APPLIED || 0,   key: "APPLIED" },
-    { label: "OA",        value: summary.OA || 0,         key: "OA" },
-    { label: "Interview", value: summary.INTERVIEW || 0,  key: "INTERVIEW" },
-    { label: "Offer",     value: summary.OFFER || 0,      key: "OFFER" },
+    { label: "Applied", value: summary.APPLIED || 0, key: "APPLIED" },
+    { label: "OA", value: summary.OA || 0, key: "OA" },
+    { label: "Interview", value: summary.INTERVIEW || 0, key: "INTERVIEW" },
+    { label: "Offer", value: summary.OFFER || 0, key: "OFFER" },
   ];
   const pipelineMax = Math.max(...pipeline.map((p) => p.value), 1);
 
@@ -121,8 +125,6 @@ export default function DashboardPage() {
 
       <DashboardLayout onCreateClick={() => setCreateOpen(true)}>
         <div className="db-root">
-
-          {/* KPI Strip */}
           <div className="db-kpi-strip db-kpi-strip--wide">
             {kpis.map((kpi) => (
               <div key={kpi.label} className="db-kpi">
@@ -130,9 +132,7 @@ export default function DashboardPage() {
                   <i className={`pi ${kpi.icon}`} />
                 </div>
                 <div>
-                  <div className="db-kpi__value">
-                    {loading ? "—" : kpi.value}
-                  </div>
+                  <div className="db-kpi__value">{loading ? "—" : kpi.value}</div>
                   <div className="db-kpi__label">{kpi.label}</div>
                 </div>
               </div>
@@ -140,8 +140,6 @@ export default function DashboardPage() {
           </div>
 
           <div className="db-dashboard-grid">
-
-            {/* Pipeline Funnel */}
             <div className="db-board db-board--half">
               <div className="db-board__header">
                 <div>
@@ -181,7 +179,6 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Recent Activity */}
             <div className="db-board db-board--half">
               <div className="db-board__header">
                 <div>
@@ -210,8 +207,8 @@ export default function DashboardPage() {
                   <div className="db-empty__icon"><i className="pi pi-inbox" /></div>
                   <h3>No applications yet</h3>
                   <p>Create your first application to start tracking your pipeline.</p>
-                    <Button
-                      className="db-btn-primary"
+                  <Button
+                    className="db-btn-primary"
                     label="Add Application"
                     icon="pi pi-plus"
                     size="small"
@@ -259,7 +256,6 @@ export default function DashboardPage() {
                 </ul>
               )}
             </div>
-
           </div>
         </div>
 

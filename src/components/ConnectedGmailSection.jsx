@@ -4,10 +4,12 @@ import { useLocation } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
 import { gmailService } from "../services/gmailService";
+import { useActiveAccount } from "../context/ActiveAccountContext";
 
 export default function ConnectedGmailSection() {
   const toast = useRef(null);
   const location = useLocation();
+  const { activeAccount, setActiveAccount, reloadAccounts } = useActiveAccount();
   const query = useMemo(
     () => new URLSearchParams(location.search),
     [location.search]
@@ -78,7 +80,23 @@ export default function ConnectedGmailSection() {
     setRemovingEmail(email);
     try {
       await gmailService.removeAccount(email);
-      setAccounts((prev) => prev.filter((a) => a.email !== email));
+
+      setAccounts((prev) => {
+      const next = prev.filter((a) => a.email !== email);
+
+      // If the deleted email was the active one, pick a new active account
+      if (activeAccount === email) {
+        if (next.length === 0) {
+          setActiveAccount(null);
+        } else {
+          setActiveAccount(next[0].email);
+        }
+      }
+
+      return next;
+      });
+      await reloadAccounts()
+      
       toast.current?.show({
         severity: "success",
         summary: "Account removed",

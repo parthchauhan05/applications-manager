@@ -7,6 +7,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import ApplicationFormDialog from "../components/ApplicationFormDialog";
 import { applicationService } from "../services/applicationService";
 import { useAuth } from "../context/AuthContext";
+import { useActiveAccount } from "../context/ActiveAccountContext";
 import {
   APPLICATION_STATUS,
   STATUS_OPTIONS,
@@ -60,6 +61,7 @@ function getNextStep(item) {
 
 export default function ApplicationsPage() {
   const toast = useRef(null);
+  const { activeAccount } = useActiveAccount();
 
   const [items, setItems] = useState([]);
   const [summary, setSummary] = useState({});
@@ -109,6 +111,7 @@ export default function ApplicationsPage() {
       size: rows,
       status: statusFilter,
       search: debouncedSearch,
+      email: activeAccount,
     });
 
     const data = res.data;
@@ -135,7 +138,7 @@ export default function ApplicationsPage() {
 
   useEffect(() => {
     loadPage();
-  }, [page, rows, statusFilter, debouncedSearch]);
+  }, [page, rows, statusFilter, debouncedSearch, activeAccount]);
 
   useEffect(() => {
     loadSummary();

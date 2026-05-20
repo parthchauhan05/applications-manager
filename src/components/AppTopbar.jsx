@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Avatar } from "primereact/avatar";
 import { Menu } from "primereact/menu";
+import { Dropdown } from "primereact/dropdown";
 import { useAuth } from "../context/AuthContext";
+import { useActiveAccount } from "../context/ActiveAccountContext";
 import { APP_NAME } from "../utils/constants";
 
 export default function AppTopbar({ onMenuClick, onCreateClick }) {
   const { userEmail, logout } = useAuth();
+  const { accounts, activeAccount, setActiveAccount, loadingAccounts } = useActiveAccount();
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
@@ -36,6 +39,8 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
     },
   ];
 
+  const accountOptions = accounts.map((a) => ({ label: a.email, value: a.email }));
+
   return (
     <header className="shell-topbar">
       <div className="shell-topbar__left">
@@ -55,8 +60,26 @@ export default function AppTopbar({ onMenuClick, onCreateClick }) {
       </div>
 
       <div className="shell-topbar__right">
+        {/* Account switcher – only visible when at least 1 Gmail account is linked */}
+      {!loadingAccounts && accounts.length > 0 && (
+        accounts.length === 1 ? (
+          <div className="app-topbar__account-single">
+            <i className="pi pi-envelope" />
+            <span>{activeAccount}</span>
+          </div>
+        ) : (
+          <Dropdown
+            value={activeAccount}
+            options={accountOptions}
+            onChange={(e) => setActiveAccount(e.value)}
+            placeholder="Select account"
+            className="app-topbar__account-dropdown"
+          />
+        )
+        )}
+        
         <Button
-          label="New"
+          label="Add Application"
           icon="pi pi-plus"
           size="small"
           className="db-btn-primary"
